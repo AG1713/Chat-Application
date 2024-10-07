@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     MyViewModel myViewModel;
 
     // Dialog
-    private Dialog chatGroupDialog;
+//    private Dialog chatGroupDialog;
 
     // ViewPager2 and TabLayout
     ViewPager2 viewPager;
@@ -58,13 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//        binding.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showDialog();
-//            }
-//        });
-
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
         myViewModel.getCurrentUser();
 
@@ -72,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         // ViewPager2 and TabLayout
         viewPager = binding.viewPager;
         tabLayout = binding.tabLayout;
+        tabLayout.setBackgroundColor(getResources().getColor(R.color.primary));
         fragmentArrayList = new ArrayList<>();
         fragmentArrayList.add(new ChatsFragment());
         fragmentArrayList.add(new GroupsFragment());
@@ -118,32 +112,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showDialog(){
-        chatGroupDialog = new Dialog(this);
-        chatGroupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        View view = LayoutInflater.from(this)
-                .inflate(R.layout.dialog_layout, null);
-
-        chatGroupDialog.setContentView(view);
-        chatGroupDialog.show();
-
-        Button submit = view.findViewById(R.id.submit);
-        EditText edt = view.findViewById(R.id.group_name_input);
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String groupName = edt.getText().toString();
-
-                Toast.makeText(MainActivity.this, "Test", Toast.LENGTH_SHORT).show();
-
-//                myViewModel.createNewGroup(groupName);
-
-                chatGroupDialog.dismiss();
-            }
-        });
-
-    }
+//    private void showDialog(){
+//        chatGroupDialog = new Dialog(this);
+//        chatGroupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//
+//        View view = LayoutInflater.from(this)
+//                .inflate(R.layout.dialog_layout, null);
+//
+//        chatGroupDialog.setContentView(view);
+//        chatGroupDialog.show();
+//
+//        Button submit = view.findViewById(R.id.submit);
+//        EditText edt = view.findViewById(R.id.group_name_input);
+//
+//        submit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String groupName = edt.getText().toString();
+//
+//                Toast.makeText(MainActivity.this, "Test", Toast.LENGTH_SHORT).show();
+//
+//                chatGroupDialog.dismiss();
+//            }
+//        });
+//
+//    }
 
 }

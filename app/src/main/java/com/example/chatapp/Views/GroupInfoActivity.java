@@ -1,6 +1,8 @@
 package com.example.chatapp.Views;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,9 +35,20 @@ public class GroupInfoActivity extends AppCompatActivity {
         myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
         String groupId = getIntent().getStringExtra("GROUP_ID");
+        String chatRoomId = getIntent().getStringExtra("CHATROOM_ID");
         myViewModel.getGroup(groupId).observe(this, group -> {
             if (group != null){
                 binding.setGroup(group);
+            }
+        });
+
+        binding.btnAddMembers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupInfoActivity.this, AddGroupMembersActivity.class);
+                intent.putExtra("CHATROOM_ID", chatRoomId);
+                intent.putExtra("GROUP_ID", groupId);
+                startActivity(intent);
             }
         });
 

@@ -298,17 +298,18 @@ public class Repository {
 
     public void addGroupMembers(String chatRoomId, String groupId, ArrayList<String> newMembers){
 
-        chatRoomsRef.document(chatRoomId).update("members", FieldValue.arrayUnion(newMembers))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        for (String membersId : newMembers){
-                            getUser(membersId).collection("Groups").document(groupId)
+        for (String memberId : newMembers) {
+            chatRoomsRef.document(chatRoomId).update("members", FieldValue.arrayUnion(memberId))
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+
+                            getUser(memberId).collection("Groups").document(groupId)
                                     .set(new GroupReference(groupId));
                         }
-                    }
-                });
 
+                    });
+        }
 
     }
 
