@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         // ViewPager2 and TabLayout
         viewPager = binding.viewPager;
         tabLayout = binding.tabLayout;
-        tabLayout.setBackgroundColor(getResources().getColor(R.color.primary));
         fragmentArrayList = new ArrayList<>();
         fragmentArrayList.add(new ChatsFragment());
         fragmentArrayList.add(new GroupsFragment());
