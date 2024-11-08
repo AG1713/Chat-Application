@@ -72,10 +72,10 @@ dependencies {
     // FirebaseUI for Cloud FireStore
     implementation(libs.firebase.ui.firestore)
 
-
     // Viewpager2
     implementation(libs.viewpager2)
 
-
+    // Splash Screen
+    implementation(libs.core.splashscreen)
 
 }

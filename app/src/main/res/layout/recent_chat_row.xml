@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="ChatRoom"
-            type="com.example.chatapp.model.ChatRoom" />
+            name="UserChat"
+            type="com.example.chatapp.repository.models.UserChat" />
     </data>
 
     <LinearLayout
@@ -38,7 +38,7 @@
                     android:id="@+id/txt_username"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="@{UserChat.otherUserName}"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:layout_weight="1"/>
@@ -47,7 +47,8 @@
                     android:id="@+id/txt_last_message_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ChatRoom.convertTime()}"
+                    android:layout_marginEnd="5dp"
+                    android:text="@{UserChat.convertTime()}"
                     android:textSize="12dp"
                     android:layout_gravity="end"/>
             </LinearLayout>
@@ -62,7 +63,7 @@
                     android:id="@+id/txt_last_message_sender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ChatRoom.lastMessageSenderName + ':'}"
+                    android:text="@{UserChat.lastMessageSenderName + ':'}"
                     android:maxLength="10"
                     android:textSize="18dp"/>
 
@@ -70,7 +71,7 @@
                     android:id="@+id/txt_last_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ChatRoom.lastMessage}"
+                    android:text="@{UserChat.lastMessage}"
                     android:maxLength="10"
                     android:textSize="18dp"/>
 

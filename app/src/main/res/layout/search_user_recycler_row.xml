@@ -6,7 +6,7 @@
     <data>
         <variable
             name="User"
-            type="com.example.chatapp.model.User" />
+            type="com.example.chatapp.repository.models.User" />
     </data>
 
     <LinearLayout

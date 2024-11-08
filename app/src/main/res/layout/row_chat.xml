@@ -6,7 +6,7 @@
     <data>
         <variable
             name="message"
-            type="com.example.chatapp.model.Message" />
+            type="com.example.chatapp.repository.models.Message" />
 
         <import type="android.view.View"/>
 

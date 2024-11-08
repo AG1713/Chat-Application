@@ -8,14 +8,14 @@
     <data>
         <variable
             name="group"
-            type="com.example.chatapp.model.Group" />
+            type="com.example.chatapp.repository.models.Group" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Views.UserInfoActivity">
+        tools:context=".views.UserInfoActivity">
 
         <include layout="@layout/profile_pic_view"
             android:id="@+id/user_profile_picture"

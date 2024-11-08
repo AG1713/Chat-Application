@@ -5,12 +5,8 @@
 
     <data>
         <variable
-            name="ChatRoom"
-            type="com.example.chatapp.model.ChatRoom" />
-
-        <variable
-            name="Group"
-            type="com.example.chatapp.model.Group" />
+            name="UserGroup"
+            type="com.example.chatapp.repository.models.UserGroup" />
 
     </data>
 
@@ -44,7 +40,7 @@
                     android:id="@+id/txt_group_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{Group.groupName}"
+                    android:text="@{UserGroup.groupName}"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:layout_weight="1"/>
@@ -53,7 +49,8 @@
                     android:id="@+id/txt_last_message_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ChatRoom.convertTime()}"
+                    android:layout_marginEnd="5dp"
+                    android:text="@{UserGroup.convertTime()}"
                     android:textSize="12dp"
                     android:layout_gravity="end"/>
             </LinearLayout>
@@ -67,7 +64,7 @@
                     android:id="@+id/txt_last_message_sender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ChatRoom.lastMessageSenderName + ':'}"
+                    android:text="@{UserGroup.lastMessageSenderName + ':'}"
                     android:maxLength="10"
                     android:textSize="18dp"/>
 
@@ -75,7 +72,7 @@
                     android:id="@+id/txt_last_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ChatRoom.lastMessage}"
+                    android:text="@{UserGroup.lastMessage}"
                     android:maxLength="10"
                     android:textSize="18dp"/>
 
