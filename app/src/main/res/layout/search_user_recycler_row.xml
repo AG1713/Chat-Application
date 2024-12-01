@@ -16,7 +16,9 @@
         android:layout_margin="10dp"
         android:elevation="2dp">
 
-        <include layout="@layout/profile_pic_view"
+        <include
+            android:id="@+id/other_user_profile_photo"
+            layout="@layout/profile_pic_view"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_gravity="center"

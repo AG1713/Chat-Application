@@ -12,7 +12,6 @@
         android:src="@drawable/baseline_person"
         android:padding="4dp"
         android:backgroundTint="@color/off_white"
-        android:layout_centerInParent="true"
-        app:tint="@color/light_gray" />
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

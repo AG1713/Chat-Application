@@ -17,14 +17,16 @@
         android:layout_height="match_parent"
         tools:context=".views.UserInfoActivity">
 
-        <include layout="@layout/profile_pic_view"
+        <include
             android:id="@+id/user_profile_picture"
-            android:layout_height="100dp"
-            android:layout_width="100dp"
-            app:layout_constraintStart_toStartOf="parent"
+            layout="@layout/profile_pic_view"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="15dp"
+            android:elevation="100dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="50dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/username"

@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -61,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", pref.getString("User_id", null) + " " + pref.getString("User_name", null));
 
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.d("Token", "Token: " + s);
+            }
+        });
 
         // ViewPager2 and TabLayout
         viewPager = binding.viewPager;

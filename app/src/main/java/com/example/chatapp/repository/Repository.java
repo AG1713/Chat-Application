@@ -1,11 +1,15 @@
 package com.example.chatapp.repository;
 
+import android.net.Uri;
+
 import com.example.chatapp.Callbacks.FireStoreChatRoomIdCallback;
 import com.example.chatapp.Callbacks.FireStoreDocumentReferenceCallback;
 import com.example.chatapp.Callbacks.FireStoreUserObjectCallback;
 import com.example.chatapp.Callbacks.FirebaseAuthUidCallback;
+import com.example.chatapp.Callbacks.StoragePhotoUrlCallback;
 import com.example.chatapp.repository.databases.Authentication;
 import com.example.chatapp.repository.databases.FireStoreDB;
+import com.example.chatapp.repository.databases.StorageDB;
 import com.example.chatapp.repository.models.Message;
 import com.example.chatapp.repository.models.User;
 import com.example.chatapp.repository.models.UserChat;
@@ -18,9 +22,11 @@ import java.util.ArrayList;
 public class Repository {
     Authentication authentication;
     FireStoreDB fireStoreDB;
+    StorageDB storageDB;
 
     public Repository() {
         authentication = new Authentication();
+        storageDB = new StorageDB();
 
         if (authentication.getCurrentUserId() != null){
             fireStoreDB = new FireStoreDB(authentication.getCurrentUserId());
@@ -69,8 +75,20 @@ public class Repository {
     }
 
     public void editCurrentUserProfile(String description, FireStoreDocumentReferenceCallback callback){
-
         fireStoreDB.editCurrentUserProfile(description, callback);
+    }
+
+    public void updateProfilePhoto(Uri imageUri, FireStoreDocumentReferenceCallback callback){
+        storageDB.updateProfilePhoto(authentication.getCurrentUserId(), imageUri, new StoragePhotoUrlCallback() {
+            @Override
+            public void onCallback(String Url) {
+                fireStoreDB.updateProfilePhotoUrl(Url, callback);
+            }
+        });
+    }
+
+    public void getUserProfilePhotoUrl(String id, StoragePhotoUrlCallback callback){
+        fireStoreDB.getUserProfilePhotoUrl(id, callback);
     }
 
     public FirestoreRecyclerOptions<User> getUserOptions(String hint){

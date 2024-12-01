@@ -10,10 +10,12 @@ import java.util.Date;
 public class User {
     String id;
     String username;
+    String profilePhotoUrl;
     String description;
     Timestamp createdTimestamp;
     String email;
     Timestamp lastActive;
+    String fcmToken;
 
     public User() {
     }
@@ -40,6 +42,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 
     public String getDescription() {
@@ -75,6 +85,13 @@ public class User {
         this.lastActive = lastActive;
     }
 
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 
     @Exclude
     public String getLastActiveTimeString(){

@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -77,5 +78,15 @@ dependencies {
 
     // Splash Screen
     implementation(libs.core.splashscreen)
+
+    // Cloud Storage library
+    implementation(libs.firebase.storage)
+
+    // Glide
+    implementation (libs.com.github.bumptech.glide.glide)
+    // Glide annotation processor
+    annotationProcessor (libs.glide.compiler)
+
+
 
 }

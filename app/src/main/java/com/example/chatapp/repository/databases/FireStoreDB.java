@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.chatapp.Callbacks.FireStoreChatRoomIdCallback;
 import com.example.chatapp.Callbacks.FireStoreDocumentReferenceCallback;
 import com.example.chatapp.Callbacks.FirebaseAuthUidCallback;
+import com.example.chatapp.Callbacks.StoragePhotoUrlCallback;
 import com.example.chatapp.repository.models.ChatRoom;
 import com.example.chatapp.repository.models.Group;
 import com.example.chatapp.repository.models.Message;
@@ -85,6 +86,25 @@ public class FireStoreDB {
                     callBack.onCallback(currentUserReference);
                 });
 
+    }
+
+    public void getUserProfilePhotoUrl(String id, StoragePhotoUrlCallback callback){
+        usersRef.document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                callback.onCallback(snapshot.toObject(User.class).getProfilePhotoUrl());
+                // null case is handled by glide by displaying error photo, which is the default photo icon
+            }
+        });
+    }
+
+    public void updateProfilePhotoUrl(String Url, FireStoreDocumentReferenceCallback callback){
+        currentUserReference.update("profilePhotoUrl", Url).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                callback.onCallback(currentUserReference);
+            }
+        });
     }
 
     public FirestoreRecyclerOptions<User> getUserOptions(String hint){

@@ -51,7 +51,7 @@ public class ChatsFragment extends Fragment {
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("User_name", user.getUsername());
                 editor.commit();
-                adapter = new RecentChatsAdapter(viewModel.getCurrentUsersChats(), getActivity());
+                adapter = new RecentChatsAdapter(viewModel.getCurrentUsersChats(), viewModel, getActivity());
                 adapter.startListening();
                 recyclerView.setAdapter(adapter);
             }

@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.chatapp.Callbacks.FireStoreChatRoomIdCallback;
 import com.example.chatapp.R;
 import com.example.chatapp.viewmodels.SearchUserActivityViewModel;
@@ -36,6 +38,12 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<User, Se
     @Override
     protected void onBindViewHolder(@NonNull UserModelHolder holder, int position, @NonNull User model) {
         holder.binding.setUser(model);
+        Glide.with(holder.binding.getRoot().getContext())
+                .load(model.getProfilePhotoUrl())
+                .placeholder(R.drawable.baseline_person)
+                .error(R.drawable.baseline_person)
+                .apply(RequestOptions.circleCropTransform())
+                .into(holder.binding.otherUserProfilePhoto.profilePicImageview);
 
         holder.binding.getRoot().setOnClickListener(v -> {
             if (clickable){

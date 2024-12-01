@@ -1,6 +1,9 @@
 package com.example.chatapp.views;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -9,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chatapp.R;
@@ -19,6 +23,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     ActivitySignUpBinding binding;
     SignUpActivityViewModel viewModel;
+    SharedPreferences pref;
 
 
     @Override
@@ -32,7 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         viewModel = new ViewModelProvider(this).get(SignUpActivityViewModel.class);
-
+        pref = getSharedPreferences("User", MODE_PRIVATE);
         binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +66,29 @@ public class SignUpActivity extends AppCompatActivity {
                     viewModel.signUp(binding.edtEmail.getText().toString(),
                             binding.edtPassword.getText().toString(),
                             binding.edtUsername.getText().toString(),
-                            binding.edtDescription.getText().toString());
+                            binding.edtDescription.getText().toString())
+                            .observe(SignUpActivity.this, new Observer<String>() {
+                                @Override
+                                public void onChanged(String Uid) {
+                                    if (Uid == null){
+                                        Toast.makeText(
+                                                SignUpActivity.this,
+                                                "Email already taken",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        SharedPreferences.Editor editor = pref.edit();
+                                        editor.putString("User_id", Uid);
+                                        editor.commit();
+                                        Log.d("SignInActivity", Uid);
+                                        Intent i = new Intent(SignUpActivity.this, MainActivity.class);
+                                        startActivity(i);
+                                    }
+                                }
+                            });
+
+
+
                 }
             }
         });

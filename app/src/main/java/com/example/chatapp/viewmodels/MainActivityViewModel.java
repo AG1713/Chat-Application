@@ -1,10 +1,13 @@
 package com.example.chatapp.viewmodels;
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.chatapp.Callbacks.FireStoreDocumentReferenceCallback;
+import com.example.chatapp.Callbacks.StoragePhotoUrlCallback;
 import com.example.chatapp.repository.models.User;
 import com.example.chatapp.repository.models.UserChat;
 import com.example.chatapp.repository.models.UserGroup;
@@ -48,6 +51,24 @@ public class MainActivityViewModel extends ViewModel {
         );
     }
 
+    public void updateProfilePhoto(Uri imageUri){
+        repository.updateProfilePhoto(imageUri, new FireStoreDocumentReferenceCallback() {
+            @Override
+            public void onCallback(DocumentReference user) {
+                user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        currentUser.postValue(snapshot.toObject(User.class));
+                    }
+                });
+            }
+        });
+    }
+
+    public void getUserProfilePhotoUrl(String id, StoragePhotoUrlCallback callback){
+        repository.getUserProfilePhotoUrl(id, callback);
+    }
+
     public FirestoreRecyclerOptions<UserChat> getCurrentUsersChats(){
         return repository.getCurrentUsersChats();
     }
@@ -55,6 +76,8 @@ public class MainActivityViewModel extends ViewModel {
     public FirestoreRecyclerOptions<UserGroup> getCurrentUsersGroups(){
         return repository.getCurrentUsersGroups();
     }
+
+
 
     public void signOut(){
         repository.signOut();

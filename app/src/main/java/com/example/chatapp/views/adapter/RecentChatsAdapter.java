@@ -10,7 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.chatapp.Callbacks.StoragePhotoUrlCallback;
 import com.example.chatapp.R;
+import com.example.chatapp.viewmodels.MainActivityViewModel;
 import com.example.chatapp.views.ChatActivity;
 import com.example.chatapp.databinding.RecentChatRowBinding;
 import com.example.chatapp.repository.models.UserChat;
@@ -19,10 +23,12 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class RecentChatsAdapter extends FirestoreRecyclerAdapter<UserChat, RecentChatsAdapter.MyViewHolder> {
     Context context;
+    MainActivityViewModel viewModel;
 
-    public RecentChatsAdapter(@NonNull FirestoreRecyclerOptions<UserChat> options, Context context) {
+    public RecentChatsAdapter(@NonNull FirestoreRecyclerOptions<UserChat> options, MainActivityViewModel viewModel, Context context) {
         super(options);
         this.context = context;
+        this.viewModel = viewModel;
 
         Log.d("RecentChatsAdapter", "Number of chats: " + options.getSnapshots().size());
     }
@@ -30,6 +36,20 @@ public class RecentChatsAdapter extends FirestoreRecyclerAdapter<UserChat, Recen
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull UserChat model) {
         holder.binding.setUserChat(model);
+
+        viewModel.getUserProfilePhotoUrl(model.getOtherUserId(), new StoragePhotoUrlCallback() {
+            @Override
+            public void onCallback(String Url) {
+                Glide.with(holder.binding.getRoot().getContext())
+                        .load(Url)
+                        .placeholder(R.drawable.baseline_person)
+                        .error(R.drawable.baseline_person)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(holder.binding.otherUserProfilePhoto.profilePicImageview);
+            }
+        });
+
+
 
         /*
         TODO: Chatroom creation asynchronous. Make it such that the passing of intent happens

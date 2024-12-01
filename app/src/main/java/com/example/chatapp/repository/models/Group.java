@@ -9,6 +9,7 @@ public class Group {
     String id;
     String chatRoomId;
     String groupName;
+    String groupPhotoUrl;
     String description;
     Timestamp creationTimestamp;
 
@@ -46,6 +47,14 @@ public class Group {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getGroupPhotoUrl() {
+        return groupPhotoUrl;
+    }
+
+    public void setGroupPhotoUrl(String groupPhotoUrl) {
+        this.groupPhotoUrl = groupPhotoUrl;
     }
 
     public String getDescription() {
