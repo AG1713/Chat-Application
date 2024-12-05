@@ -10,6 +10,7 @@ import com.example.chatapp.Callbacks.StoragePhotoUrlCallback;
 import com.example.chatapp.repository.databases.Authentication;
 import com.example.chatapp.repository.databases.FireStoreDB;
 import com.example.chatapp.repository.databases.StorageDB;
+import com.example.chatapp.repository.models.Member;
 import com.example.chatapp.repository.models.Message;
 import com.example.chatapp.repository.models.User;
 import com.example.chatapp.repository.models.UserChat;
@@ -99,11 +100,11 @@ public class Repository {
         return fireStoreDB.getCurrentUsersChats();
     }
 
-    public void createChatRoomForUsers(String userId, FireStoreChatRoomIdCallback callback){
-        fireStoreDB.createChatRoomForUsers(userId, callback);
+    public void createChatRoomForUsers(String userId, String username, FireStoreChatRoomIdCallback callback){
+        fireStoreDB.createChatRoomForUsers(userId, username, callback);
     }
 
-    public void createChatRoomForGroups(String groupName, String description, ArrayList<String> members, FireStoreChatRoomIdCallback callback){
+    public void createChatRoomForGroups(String groupName, String description, ArrayList<Member> members, FireStoreChatRoomIdCallback callback){
         fireStoreDB.createChatRoomForGroups(groupName, description, members, callback);
     }
 
@@ -127,7 +128,7 @@ public class Repository {
         return fireStoreDB.getGroup(groupId);
     }
 
-    public void addGroupMembers(String groupId, String groupName, String chatRoomId, ArrayList<String> newMembers){
+    public void addGroupMembers(String groupId, String groupName, String chatRoomId, ArrayList<Member> newMembers){
         fireStoreDB.addGroupMembers(groupId, groupName, chatRoomId, newMembers);
     }
 

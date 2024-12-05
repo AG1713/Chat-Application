@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.chatapp.Callbacks.FireStoreChatRoomIdCallback;
 import com.example.chatapp.repository.Repository;
+import com.example.chatapp.repository.models.Member;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class CreateGroupActivityViewModel extends ViewModel {
         chatRoomId = new MutableLiveData<>();
     }
 
-    public void createChatRoomForGroups(String groupName, String description, ArrayList<String> members, FireStoreChatRoomIdCallback callback){
+    public void createChatRoomForGroups(String groupName, String description, ArrayList<Member> members, FireStoreChatRoomIdCallback callback){
         repository.createChatRoomForGroups(groupName, description, members, callback);
     }
 

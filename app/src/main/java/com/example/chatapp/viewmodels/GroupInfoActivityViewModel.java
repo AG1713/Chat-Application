@@ -43,4 +43,7 @@ public class GroupInfoActivityViewModel extends ViewModel {
         return chatRoomMutableLiveData;
     }
 
+
+
+
 }

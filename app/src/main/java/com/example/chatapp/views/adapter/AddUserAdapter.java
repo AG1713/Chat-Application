@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
+import com.example.chatapp.repository.models.Member;
 import com.example.chatapp.viewmodels.AddGroupMembersActivityViewModel;
 import com.example.chatapp.databinding.SearchUserRecyclerRowBinding;
 import com.example.chatapp.repository.models.User;
@@ -41,8 +42,8 @@ public class AddUserAdapter extends FirestoreRecyclerAdapter<User, AddUserAdapte
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> members = new ArrayList<>();
-                members.add(model.getId());
+                ArrayList<Member> members = new ArrayList<>();
+                members.add(new Member(model.getId(), model.getUsername()));
 
                 viewModel.addGroupMembers(members);
                 if (context instanceof Activity){

@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.chatapp.Callbacks.FireStoreChatRoomIdCallback;
 import com.example.chatapp.R;
+import com.example.chatapp.repository.models.Member;
 import com.example.chatapp.viewmodels.CreateGroupActivityViewModel;
 import com.example.chatapp.databinding.ActivityCreateGroupBinding;
 
@@ -57,24 +58,25 @@ public class CreateGroupActivity extends AppCompatActivity {
                 new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(Uri o) {
-                        Log.d("ProfileFragment", "URI: " + o +
-                                "\ntrue?:" + o.getScheme().equals("content"));
-                        imageUri = o;
+                        if (o != null) {
+                            Log.d("ProfileFragment", "URI: " + o +
+                                    "\ntrue?:" + o.getScheme().equals("content"));
+                            imageUri = o;
 
-                        ContentResolver resolver = getContentResolver();
-                        try (InputStream inputStream = resolver.openInputStream(o)) {
-                            if (inputStream != null) {
-                                Log.d("File Check", "File exists at URI.");
+                            ContentResolver resolver = getContentResolver();
+                            try (InputStream inputStream = resolver.openInputStream(o)) {
+                                if (inputStream != null) {
+                                    Log.d("File Check", "File exists at URI.");
+                                }
+                            } catch (IOException e) {
+                                Log.e("File Check", "File not found at URI.", e);
                             }
-                        } catch (IOException e) {
-                            Log.e("File Check", "File not found at URI.", e);
+
+                            Glide.with(CreateGroupActivity.this)
+                                    .load(o)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(binding.groupPhoto.profilePicImageview);
                         }
-
-                        Glide.with(CreateGroupActivity.this)
-                                .load(o)
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(binding.groupPhoto.profilePicImageview);
-
                     }
                 }
         );
@@ -101,24 +103,20 @@ public class CreateGroupActivity extends AppCompatActivity {
                 } else if (groupName.length() < 3) {
                     Toast.makeText(CreateGroupActivity.this, "Group Name too short", Toast.LENGTH_SHORT).show();
                 } else {
-                    ArrayList<String> members = new ArrayList<>();
-                    members.add(userId);
+                    ArrayList<Member> members = new ArrayList<>();
 
                     Intent i = new Intent(CreateGroupActivity.this, ChatActivity.class);
                     i.putExtra("GROUP_NAME", groupName);
 
-                    viewModel.createChatRoomForGroups(groupName, groupDescription, members, new FireStoreChatRoomIdCallback() {
-                        @Override
-                        public void onCallback(String chatRoomId) {
-                            i.putExtra("GROUP_ID", chatRoomId);
-                            // NOTE: The above is because currently groupId and chatRoomId are same
-                            //       Might change later.
+                    viewModel.createChatRoomForGroups(groupName, groupDescription, members, chatRoomId -> {
+                        i.putExtra("GROUP_ID", chatRoomId);
+                        // NOTE: The above is because currently groupId and chatRoomId are same
+                        //       Might change later.
 
-                            i.putExtra("CHATROOM_ID", chatRoomId);
-                            Log.d("CreateGroupActivity", "ChatRoomId : " + chatRoomId);
-                            startActivity(i);
-                            finish();
-                        }
+                        i.putExtra("CHATROOM_ID", chatRoomId);
+                        Log.d("CreateGroupActivity", "ChatRoomId : " + chatRoomId);
+                        startActivity(i);
+                        finish();
                     });
 
 

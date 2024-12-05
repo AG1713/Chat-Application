@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class ChatRoom {
     String id;
-    ArrayList<String> members;
+    ArrayList<Member> members;
 
     public ChatRoom() {
     }
 
-    public ChatRoom(String id, ArrayList<String> members) {
+    public ChatRoom(String id, ArrayList<Member> members) {
         this.id = id;
         this.members = members;
     }
@@ -22,11 +22,11 @@ public class ChatRoom {
         this.id = id;
     }
 
-    public ArrayList<String> getMembers() {
+    public ArrayList<Member> getMembers() {
         return members;
     }
 
-    public void setMembers(ArrayList<String> members) {
+    public void setMembers(ArrayList<Member> members) {
         this.members = members;
     }
 

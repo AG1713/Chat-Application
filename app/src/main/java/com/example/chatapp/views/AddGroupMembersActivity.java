@@ -9,11 +9,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
+import com.example.chatapp.repository.models.Group;
 import com.example.chatapp.viewmodels.AddGroupMembersActivityViewModel;
 import com.example.chatapp.views.adapter.AddUserAdapter;
 import com.example.chatapp.databinding.ActivityAddGroupMembersBinding;
@@ -23,7 +25,6 @@ public class AddGroupMembersActivity extends AppCompatActivity {
     AddGroupMembersActivityViewModel viewModel;
     RecyclerView recyclerView;
     AddUserAdapter adapter;
-    ArrayAdapter<String> listAdapter;
     String chatRoomId;
     String groupId;
 
@@ -43,12 +44,10 @@ public class AddGroupMembersActivity extends AppCompatActivity {
         chatRoomId = getIntent().getStringExtra("CHATROOM_ID");
         groupId = getIntent().getStringExtra("GROUP_ID");
 
-        binding.btnSearchUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getUsers();
-            }
-        });
+
+        viewModel.getGroup(groupId).observe(this, group ->
+                binding.btnSearchUser.setOnClickListener(v -> getUsers()));
+
 
     }
 

@@ -26,8 +26,6 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<User, Se
     SearchUserActivityViewModel viewModel;
     boolean clickable; // Do pause the click listener when one of the item is clicked
 
-
-
     public SearchUserRecyclerAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context, SearchUserActivityViewModel viewModel) {
         super(options);
         this.context = context;
@@ -52,7 +50,7 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<User, Se
                 i.putExtra("USER_ID", model.getId());
                 i.putExtra("USER_NAME", model.getUsername());
 
-                viewModel.createChatRoomForUsers(model.getId(), new FireStoreChatRoomIdCallback() {
+                viewModel.createChatRoomForUsers(model.getId(), model.getUsername(), new FireStoreChatRoomIdCallback() {
                     @Override
                     public void onCallback(String chatRoomId) {
                         i.putExtra("CHATROOM_ID", chatRoomId);

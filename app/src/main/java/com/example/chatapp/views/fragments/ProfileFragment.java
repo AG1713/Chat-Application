@@ -83,23 +83,24 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(Uri o) {
-//                        binding.userProfilePicture.profilePicImageview.setImageURI(o);
-                        Log.d("ProfileFragment", "URI: " + o +
-                                "\ntrue?:" + o.getScheme().equals("content"));
-                        imageUri = o;
-                        ContentResolver resolver = getContext().getContentResolver();
-                        try (InputStream inputStream = resolver.openInputStream(o)) {
-                            if (inputStream != null) {
-                                Log.d("File Check", "File exists at URI.");
+                        if (o != null) {
+                            Log.d("ProfileFragment", "URI: " + o +
+                                    "\ntrue?:" + o.getScheme().equals("content"));
+                            imageUri = o;
+                            ContentResolver resolver = getContext().getContentResolver();
+                            try (InputStream inputStream = resolver.openInputStream(o)) {
+                                if (inputStream != null) {
+                                    Log.d("File Check", "File exists at URI.");
+                                }
+                            } catch (IOException e) {
+                                Log.e("File Check", "File not found at URI.", e);
                             }
-                        } catch (IOException e) {
-                            Log.e("File Check", "File not found at URI.", e);
+                            Glide.with(getActivity())
+                                    .load(o)
+                                    .placeholder(R.drawable.baseline_person)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(binding.userProfilePicture.profilePicImageview);
                         }
-                        Glide.with(getActivity())
-                                .load(o)
-                                .placeholder(R.drawable.baseline_person)
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(binding.userProfilePicture.profilePicImageview);
 
                     }
                 }

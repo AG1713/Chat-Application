@@ -18,8 +18,8 @@ public class SearchUserActivityViewModel extends ViewModel {
         return repository.getUserOptions(hint);
     }
 
-    public void createChatRoomForUsers(String userId, FireStoreChatRoomIdCallback callback){
-        repository.createChatRoomForUsers(userId, callback);
+    public void createChatRoomForUsers(String userId, String username, FireStoreChatRoomIdCallback callback){
+        repository.createChatRoomForUsers(userId, username, callback);
     }
 
 }

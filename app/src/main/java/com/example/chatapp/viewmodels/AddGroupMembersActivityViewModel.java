@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.chatapp.repository.models.Group;
+import com.example.chatapp.repository.models.Member;
 import com.example.chatapp.repository.models.User;
 import com.example.chatapp.repository.Repository;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -37,7 +38,7 @@ public class AddGroupMembersActivityViewModel extends ViewModel {
         return repository.getUserOptions(hint);
     }
 
-    public void addGroupMembers(ArrayList<String> newMembers){
+    public void addGroupMembers(ArrayList<Member> newMembers){
         repository.addGroupMembers(groupMutableLiveData.getValue().getId(),
                 groupMutableLiveData.getValue().getGroupName(),
                 groupMutableLiveData.getValue().getChatRoomId(),

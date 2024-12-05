@@ -8,6 +8,7 @@ import com.example.chatapp.Callbacks.FirebaseAuthUidCallback;
 import com.example.chatapp.Callbacks.StoragePhotoUrlCallback;
 import com.example.chatapp.repository.models.ChatRoom;
 import com.example.chatapp.repository.models.Group;
+import com.example.chatapp.repository.models.Member;
 import com.example.chatapp.repository.models.Message;
 import com.example.chatapp.repository.models.User;
 import com.example.chatapp.repository.models.UserChat;
@@ -18,6 +19,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -135,7 +137,7 @@ public class FireStoreDB {
         return userId2 + "_" + userId1;
     }
 
-    private void createChatRoom(String chatRoomId, ArrayList<String> members, FireStoreChatRoomIdCallback callBack){
+    private void createChatRoom(String chatRoomId, ArrayList<Member> members, FireStoreChatRoomIdCallback callBack){
         // chatRoomId - passed as a parameter since the chatroom could be made for groups or one-to-one chat
         ChatRoom newChatRoom = new ChatRoom(
                 chatRoomId,
@@ -154,63 +156,80 @@ public class FireStoreDB {
         return chatRoomsRef.document(chatRoomId);
     }
 
-    public void createChatRoomForUsers(String userId, FireStoreChatRoomIdCallback callBack){
-        ArrayList<String> members = new ArrayList<>();
-        members.add(currentUserId);
-        members.add(userId);
+    public void createChatRoomForUsers(String userId, String username, FireStoreChatRoomIdCallback callBack){
+        ArrayList<Member> members = new ArrayList<>();
+        currentUserReference.get().addOnSuccessListener(snapshot -> {
+            User currentUser = snapshot.toObject(User.class);
+            members.add(new Member(currentUserId, currentUser.getUsername()));
+            members.add(new Member(userId, username));
 
-        String chatRoomId = getChatRoomIdForUsers(currentUserId, userId);
+            String chatRoomId = getChatRoomIdForUsers(currentUserId, userId);
 
-        createChatRoom(chatRoomId, members, new FireStoreChatRoomIdCallback() {
-            @Override
-            public void onCallback(String chatRoomId) {
-                for (int i=0 ; i<members.size() ; i++){
+            createChatRoom(chatRoomId, members, new FireStoreChatRoomIdCallback() {
+                @Override
+                public void onCallback(String chatRoomId) {
+                    for (int i=0 ; i<members.size() ; i++){
 
-                    int finalI = i;
-                    usersRef.document(members.get((i+1)%members.size())).get().addOnSuccessListener(snapshot ->
-                            usersRef.document(members.get(finalI)).collection("Chats")
-                                    .document(chatRoomId).set(new UserChat(
-                                            chatRoomId,
-                                            members.get((finalI +1)%members.size()),
-                                            snapshot.toObject(User.class).getUsername()
-                                    )));
+                        int finalI = i;
+                        usersRef.document(members.get((i+1)%members.size()).getId()).get().addOnSuccessListener(snapshot ->
+                                usersRef.document(members.get(finalI).getId()).collection("Chats")
+                                        .document(chatRoomId).set(new UserChat(
+                                                chatRoomId,
+                                                members.get((finalI +1)%members.size()).getId(),
+                                                snapshot.toObject(User.class).getUsername()
+                                        )));
 
-                    callBack.onCallback(chatRoomId);
+                        callBack.onCallback(chatRoomId);
+                    }
                 }
-            }
+            });
+
+
         });
+
+
     }
 
-    public void createChatRoomForGroups(String groupName, String description, ArrayList<String> members, FireStoreChatRoomIdCallback callBack){
+    public void createChatRoomForGroups(String groupName, String description, ArrayList<Member> members, FireStoreChatRoomIdCallback callBack){
 
         String groupId = groupName.replace(' ','_') + Timestamp.now().getSeconds();
         String chatRoomId = groupId;
 
         // Effectively, chatRoomId and groupId are same, but lets avoid assumptions, since it may
         // change in future
-        createChatRoom(chatRoomId, members, new FireStoreChatRoomIdCallback() {
-            @Override
-            public void onCallback(String chatRoomId) {
 
-                groupsRef.document(groupId).set(new Group(
-                                groupId,
-                                chatRoomId,
-                                groupName,
-                                description))
-                        .addOnSuccessListener(unused -> {
-                            for (int i=0; i< members.size() ; i++){
-                                usersRef.document(members.get(i)).collection("Groups")
-                                        .document(groupId).set(new UserGroup(
-                                                groupId,
-                                                groupName
-                                        ));
-                            }
+        // Getting current user
+        currentUserReference.get().addOnSuccessListener(snapshot -> {
+            User currentUser = snapshot.toObject(User.class);
+            members.add(new Member(currentUserId, currentUser.getUsername()));
 
-                            callBack.onCallback(chatRoomId);
-                        });
+            createChatRoom(chatRoomId, members, new FireStoreChatRoomIdCallback() {
+                @Override
+                public void onCallback(String chatRoomId) {
 
-            }
+                    groupsRef.document(groupId).set(new Group(
+                                    groupId,
+                                    chatRoomId,
+                                    groupName,
+                                    description))
+                            .addOnSuccessListener(unused -> {
+                                for (int i=0; i< members.size() ; i++){
+                                    usersRef.document(members.get(i).getId()).collection("Groups")
+                                            .document(groupId).set(new UserGroup(
+                                                    groupId,
+                                                    groupName
+                                            ));
+                                }
+
+                                callBack.onCallback(chatRoomId);
+                            });
+
+                }
+            });
+
         });
+
+
 
     }
 
@@ -230,10 +249,10 @@ public class FireStoreDB {
     // A trigger could be used instead of this, but its not free :(
     private void updateUserChats(String chatRoomId, Message message){
         chatRoomsRef.document(chatRoomId).get().addOnSuccessListener(snapshot -> {
-            ArrayList<String> members = snapshot.toObject(ChatRoom.class).getMembers();
+            ArrayList<Member> members = snapshot.toObject(ChatRoom.class).getMembers();
 
-            for (String member : members){
-                usersRef.document(member).collection("Chats").document(chatRoomId).update(
+            for (Member member : members){
+                usersRef.document(member.getId()).collection("Chats").document(chatRoomId).update(
                         "lastMessage", message.getText(),
                         "lastMessageSenderId", message.getSenderId(),
                         "lastMessageSenderName", message.getSenderName(),
@@ -247,10 +266,10 @@ public class FireStoreDB {
         chatRoomsRef.document(chatRoomId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot snapshot) {
-                ArrayList<String> members = snapshot.toObject(ChatRoom.class).getMembers();
+                ArrayList<Member> members = snapshot.toObject(ChatRoom.class).getMembers();
 
-                for (String member : members){
-                    usersRef.document(member).collection("Groups").document(chatRoomId).update(
+                for (Member member : members){
+                    usersRef.document(member.getId()).collection("Groups").document(chatRoomId).update(
                             "lastMessage", message.getText(),
                             "lastMessageSenderId", message.getSenderId(),
                             "lastMessageSenderName", message.getSenderName(),
@@ -295,14 +314,14 @@ public class FireStoreDB {
         return groupsRef.document(groupId);
     }
 
-    public void addGroupMembers(String groupId, String groupName, String chatRoomId, ArrayList<String> newMembers){
+    public void addGroupMembers(String groupId, String groupName, String chatRoomId, ArrayList<Member> newMembers){
 
-        chatRoomsRef.document(chatRoomId).update("members", newMembers.toArray())
+        chatRoomsRef.document(chatRoomId).update("members", FieldValue.arrayUnion(newMembers.toArray()))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        for (String member : newMembers){
-                            usersRef.document(member).collection("Groups")
+                        for (Member member : newMembers){
+                            usersRef.document(member.getId()).collection("Groups")
                                     .document(chatRoomId).set(new UserGroup(groupId, groupName));
                         }
                     }
