@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chatapp.Callbacks.CompletionCallback;
 import com.example.chatapp.R;
 import com.example.chatapp.repository.models.ChatRoom;
 import com.example.chatapp.viewmodels.GroupInfoActivityViewModel;
@@ -76,6 +77,15 @@ public class GroupInfoActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.btnLeaveGroup.setOnClickListener(v -> viewModel.leaveGroup(groupId, new CompletionCallback() {
+            @Override
+            public void onCallback() {
+                Intent intent = new Intent(GroupInfoActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }));
 
 
     }

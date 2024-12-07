@@ -2,6 +2,7 @@ package com.example.chatapp.repository;
 
 import android.net.Uri;
 
+import com.example.chatapp.Callbacks.CompletionCallback;
 import com.example.chatapp.Callbacks.FireStoreChatRoomIdCallback;
 import com.example.chatapp.Callbacks.FireStoreDocumentReferenceCallback;
 import com.example.chatapp.Callbacks.FireStoreUserObjectCallback;
@@ -134,6 +135,10 @@ public class Repository {
 
     public FirestoreRecyclerOptions<UserGroup> getCurrentUsersGroups(){
         return fireStoreDB.getCurrentUsersGroups();
+    }
+
+    public void leaveGroup(String groupId, CompletionCallback callback){
+        fireStoreDB.leaveGroup(groupId, callback);
     }
 
 }

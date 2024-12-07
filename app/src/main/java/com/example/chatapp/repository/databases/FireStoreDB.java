@@ -2,6 +2,7 @@ package com.example.chatapp.repository.databases;
 
 import android.util.Log;
 
+import com.example.chatapp.Callbacks.CompletionCallback;
 import com.example.chatapp.Callbacks.FireStoreChatRoomIdCallback;
 import com.example.chatapp.Callbacks.FireStoreDocumentReferenceCallback;
 import com.example.chatapp.Callbacks.FirebaseAuthUidCallback;
@@ -334,6 +335,34 @@ public class FireStoreDB {
                 .orderBy("lastMessageSentTime", Query.Direction.DESCENDING);
 
         return new FirestoreRecyclerOptions.Builder<UserGroup>().setQuery(query, UserGroup.class).build();
+    }
+
+    private void removeMember(String chatRoomId, CompletionCallback callback){
+        // So first we get the username
+
+        currentUserReference.get().addOnSuccessListener(snapshot -> {
+            chatRoomsRef.document(chatRoomId).update("members", FieldValue.arrayRemove(
+                    new Member(currentUserId, snapshot.toObject(User.class).getUsername())
+            )).addOnSuccessListener(unused -> callback.onCallback());
+
+        });
+
+    }
+
+    public void leaveGroup(String groupId, CompletionCallback callback){
+        // This means, removing them from the chat room members, and also, removing 'UserGroup'
+        // object
+
+        // Note that the groupId and chatRoomId are same for now, might change in future
+        removeMember(groupId, () -> {
+            currentUserReference.collection("Groups").document(groupId).delete()
+                    .addOnSuccessListener(unused -> {
+                        callback.onCallback();
+                        Log.d("FireStoreDB", "leaveGroup: Completed Successfully");
+                    });
+
+        });
+
     }
 
 }

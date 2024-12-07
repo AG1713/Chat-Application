@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.chatapp.Callbacks.CompletionCallback;
 import com.example.chatapp.repository.models.ChatRoom;
 import com.example.chatapp.repository.models.Group;
 import com.example.chatapp.repository.Repository;
@@ -43,7 +44,9 @@ public class GroupInfoActivityViewModel extends ViewModel {
         return chatRoomMutableLiveData;
     }
 
-
+    public void leaveGroup(String groupId, CompletionCallback callback){
+        repository.leaveGroup(groupId, callback);
+    }
 
 
 }
