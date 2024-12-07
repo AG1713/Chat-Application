@@ -11,25 +11,42 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.chatapp.Callbacks.StoragePhotoUrlCallback;
 import com.example.chatapp.R;
 import com.example.chatapp.repository.models.UserGroup;
+import com.example.chatapp.viewmodels.MainActivityViewModel;
 import com.example.chatapp.views.ChatActivity;
 import com.example.chatapp.databinding.RecentGroupsRowBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class RecentGroupsAdapter extends FirestoreRecyclerAdapter<UserGroup, RecentGroupsAdapter.MyViewHolder> {
-
     Context context;
+    MainActivityViewModel viewModel;
 
-    public RecentGroupsAdapter(@NonNull FirestoreRecyclerOptions<UserGroup> options, Context context) {
+    public RecentGroupsAdapter(@NonNull FirestoreRecyclerOptions<UserGroup> options, Context context, MainActivityViewModel viewModel) {
         super(options);
         this.context = context;
+        this.viewModel = viewModel;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull UserGroup model) {
         holder.binding.setUserGroup(model);
+
+        viewModel.getGroupPhotoUrl(model.getGroupId(), new StoragePhotoUrlCallback() {
+            @Override
+            public void onCallback(String Url) {
+                Glide.with(holder.binding.getRoot().getContext())
+                        .load(Url)
+                        .placeholder(R.drawable.baseline_person)
+                        .error(R.drawable.baseline_person)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(holder.binding.groupPhoto.profilePicImageview);
+            }
+        });
 
         Log.d("Adapter", "Group Model: " + model.getGroupName());
 

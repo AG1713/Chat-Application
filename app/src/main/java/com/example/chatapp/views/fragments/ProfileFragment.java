@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.chatapp.GlideApp;
 import com.example.chatapp.R;
 import com.example.chatapp.viewmodels.MainActivityViewModel;
 import com.example.chatapp.views.SignInActivity;
@@ -84,6 +83,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onActivityResult(Uri o) {
                         if (o != null) {
+                            photoEdited = true;
                             Log.d("ProfileFragment", "URI: " + o +
                                     "\ntrue?:" + o.getScheme().equals("content"));
                             imageUri = o;
@@ -110,7 +110,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 takePhoto.launch("image/*");
-                photoEdited = true;
             }
         };
 

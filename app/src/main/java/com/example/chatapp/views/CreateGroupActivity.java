@@ -53,42 +53,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         String userId = pref.getString("User_id", null);
         viewModel = new ViewModelProvider(this).get(CreateGroupActivityViewModel.class);
 
-        takePhoto = registerForActivityResult(
-                new ActivityResultContracts.GetContent(),
-                new ActivityResultCallback<Uri>() {
-                    @Override
-                    public void onActivityResult(Uri o) {
-                        if (o != null) {
-                            Log.d("ProfileFragment", "URI: " + o +
-                                    "\ntrue?:" + o.getScheme().equals("content"));
-                            imageUri = o;
 
-                            ContentResolver resolver = getContentResolver();
-                            try (InputStream inputStream = resolver.openInputStream(o)) {
-                                if (inputStream != null) {
-                                    Log.d("File Check", "File exists at URI.");
-                                }
-                            } catch (IOException e) {
-                                Log.e("File Check", "File not found at URI.", e);
-                            }
-
-                            Glide.with(CreateGroupActivity.this)
-                                    .load(o)
-                                    .apply(RequestOptions.circleCropTransform())
-                                    .into(binding.groupPhoto.profilePicImageview);
-                        }
-                    }
-                }
-        );
-        photoEdited = false;
-
-        binding.groupPhoto.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePhoto.launch("image/*");
-                photoEdited = true;
-            }
-        });
 
         binding.btnCreateGroup.setOnClickListener(new View.OnClickListener() {
             @Override

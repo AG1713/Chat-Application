@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.chatapp.Callbacks.CompletionCallback;
 import com.example.chatapp.Callbacks.FireStoreDocumentReferenceCallback;
 import com.example.chatapp.Callbacks.StoragePhotoUrlCallback;
 import com.example.chatapp.repository.models.User;
@@ -51,6 +52,14 @@ public class MainActivityViewModel extends ViewModel {
         );
     }
 
+    public void updateLastActiveTime(){
+        repository.updateLastActiveTime(
+                user -> user.get().addOnSuccessListener(
+                        snapshot -> currentUser.postValue(snapshot.toObject(User.class))
+                )
+        );
+    }
+
     public void updateProfilePhoto(Uri imageUri){
         repository.updateProfilePhoto(imageUri, new FireStoreDocumentReferenceCallback() {
             @Override
@@ -75,6 +84,10 @@ public class MainActivityViewModel extends ViewModel {
 
     public FirestoreRecyclerOptions<UserGroup> getCurrentUsersGroups(){
         return repository.getCurrentUsersGroups();
+    }
+
+    public void getGroupPhotoUrl(String groupId, StoragePhotoUrlCallback callback){
+        repository.getGroupPhotoUrl(groupId, callback);
     }
 
 

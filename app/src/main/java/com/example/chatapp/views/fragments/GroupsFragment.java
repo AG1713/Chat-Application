@@ -50,7 +50,7 @@ public class GroupsFragment extends Fragment {
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("User_name", user.getUsername());
                     editor.commit();
-                    adapter = new RecentGroupsAdapter(viewModel.getCurrentUsersGroups(), getActivity());
+                    adapter = new RecentGroupsAdapter(viewModel.getCurrentUsersGroups(), getActivity(), viewModel);
                     adapter.startListening();
                     recyclerView.setAdapter(adapter);
                 }

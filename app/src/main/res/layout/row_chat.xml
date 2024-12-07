@@ -25,20 +25,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="15dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal"
             android:visibility="@{message.isMine ? View.GONE : View.VISIBLE}">
-
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/grey_node" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/left_node_bg"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -49,7 +45,6 @@
                     android:maxWidth="275dp"/>
             </LinearLayout>
 
-            <!--            text = @{message.convertTime()}-->
 
             <TextView
                 android:layout_width="30dp"
@@ -72,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginStart="15dp"
+            android:layout_marginEnd="10dp"
             android:orientation="horizontal"
             android:visibility="@{message.isMine ? View.VISIBLE : View.GONE}">
 
@@ -88,7 +84,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/right_node_bg">
+                android:background="@drawable/right_node_bg"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -98,12 +95,6 @@
                     android:gravity="start"/>
             </LinearLayout>
 
-
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/purple_node_bg"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -80,6 +80,10 @@ public class Repository {
         fireStoreDB.editCurrentUserProfile(description, callback);
     }
 
+    public void updateLastActiveTime(FireStoreDocumentReferenceCallback callback){
+        fireStoreDB.updateLastActiveTime(callback);
+    }
+
     public void updateProfilePhoto(Uri imageUri, FireStoreDocumentReferenceCallback callback){
         storageDB.updateProfilePhoto(authentication.getCurrentUserId(), imageUri, new StoragePhotoUrlCallback() {
             @Override
@@ -131,6 +135,19 @@ public class Repository {
 
     public void addGroupMembers(String groupId, String groupName, String chatRoomId, ArrayList<Member> newMembers){
         fireStoreDB.addGroupMembers(groupId, groupName, chatRoomId, newMembers);
+    }
+
+    public void getGroupPhotoUrl(String groupId, StoragePhotoUrlCallback callback){
+        fireStoreDB.getGroupPhotoUrl(groupId, callback);
+    }
+
+    public void updateGroupPhotoUrl(String groupId, Uri uri, FireStoreDocumentReferenceCallback callback){
+        storageDB.updateGroupPhoto(groupId, uri, new StoragePhotoUrlCallback() {
+            @Override
+            public void onCallback(String Url) {
+                fireStoreDB.updateGroupPhotoUrl(groupId, Url, callback);
+            }
+        });
     }
 
     public FirestoreRecyclerOptions<UserGroup> getCurrentUsersGroups(){

@@ -51,13 +51,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-//        FirebaseFirestore.getInstance().clearPersistence().addOnSuccessListener(new OnSuccessListener<Void>() {
-//            @Override
-//            public void onSuccess(Void unused) {
-//                Toast.makeText(MainActivity.this, "Cleared", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
         pref = getSharedPreferences("User", MODE_PRIVATE);
         Log.d("MainActivity", pref.getString("User_id", null) + " " + pref.getString("User_name", null));
 
@@ -115,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         ).attach();
 
+        viewModel.updateLastActiveTime();
     }
 
 }

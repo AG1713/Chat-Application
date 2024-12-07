@@ -88,7 +88,11 @@ public class FireStoreDB {
 
                     callBack.onCallback(currentUserReference);
                 });
+    }
 
+    public void updateLastActiveTime(FireStoreDocumentReferenceCallback callback){
+        currentUserReference.update("lastActive", Timestamp.now()).addOnSuccessListener(
+                unused -> callback.onCallback(currentUserReference));
     }
 
     public void getUserProfilePhotoUrl(String id, StoragePhotoUrlCallback callback){
@@ -327,6 +331,19 @@ public class FireStoreDB {
                         }
                     }
                 });
+    }
+
+    public void getGroupPhotoUrl(String groupId, StoragePhotoUrlCallback callback){
+        groupsRef.document(groupId).get().addOnSuccessListener(snapshot -> callback.onCallback(snapshot.toObject(Group.class).getGroupPhotoUrl()));
+    }
+
+    public void updateGroupPhotoUrl(String groupId, String Url, FireStoreDocumentReferenceCallback callback){
+        groupsRef.document(groupId).update("groupPhotoUrl", Url).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                callback.onCallback(groupsRef.document(groupId));
+            }
+        });
     }
 
     public FirestoreRecyclerOptions<UserGroup> getCurrentUsersGroups(){
