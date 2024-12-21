@@ -95,6 +95,7 @@ public class SignInActivity extends AppCompatActivity {
                                         editor.commit();
                                         Log.d("SignInActivity", Uid);
                                         Intent i = new Intent(SignInActivity.this, MainActivity.class);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(i);
                                     }
                                 }
