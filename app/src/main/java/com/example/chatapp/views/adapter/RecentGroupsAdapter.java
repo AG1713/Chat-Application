@@ -22,14 +22,19 @@ import com.example.chatapp.databinding.RecentGroupsRowBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.util.function.Consumer;
+
 public class RecentGroupsAdapter extends FirestoreRecyclerAdapter<UserGroup, RecentGroupsAdapter.MyViewHolder> {
     Context context;
     MainActivityViewModel viewModel;
 
-    public RecentGroupsAdapter(@NonNull FirestoreRecyclerOptions<UserGroup> options, Context context, MainActivityViewModel viewModel) {
+    Consumer<Boolean> emptyOptionsCallback;
+
+    public RecentGroupsAdapter(@NonNull FirestoreRecyclerOptions<UserGroup> options, Context context, MainActivityViewModel viewModel, Consumer<Boolean> emptyOptionsCallback) {
         super(options);
         this.context = context;
         this.viewModel = viewModel;
+        this.emptyOptionsCallback = emptyOptionsCallback;
     }
 
     @Override
@@ -91,5 +96,10 @@ public class RecentGroupsAdapter extends FirestoreRecyclerAdapter<UserGroup, Rec
         }
     }
 
-
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (getItemCount() <= 0) emptyOptionsCallback.accept(true);
+        else emptyOptionsCallback.accept(false);
+    }
 }

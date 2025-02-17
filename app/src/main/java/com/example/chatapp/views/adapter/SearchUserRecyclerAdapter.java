@@ -21,16 +21,20 @@ import com.example.chatapp.repository.models.User;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.util.function.Consumer;
+
 public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<User, SearchUserRecyclerAdapter.UserModelHolder> {
     Context context;
     SearchUserActivityViewModel viewModel;
     boolean clickable; // Do pause the click listener when one of the item is clicked
+    Consumer<Boolean> emptyOptionsCallback;
 
-    public SearchUserRecyclerAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context, SearchUserActivityViewModel viewModel) {
+    public SearchUserRecyclerAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context, SearchUserActivityViewModel viewModel, Consumer<Boolean> emptyOptionsCallback) {
         super(options);
         this.context = context;
         this.viewModel = viewModel;
         this.clickable = true;
+        this.emptyOptionsCallback = emptyOptionsCallback;
     }
 
     @Override
@@ -95,7 +99,10 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<User, Se
         }
     }
 
-
-
-
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (getItemCount() <= 0) emptyOptionsCallback.accept(true);
+        else emptyOptionsCallback.accept(false);
+    }
 }

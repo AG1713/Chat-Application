@@ -41,7 +41,7 @@ public class GroupsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         pref = getActivity().getSharedPreferences("User", Context.MODE_PRIVATE);
-        viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
 
         viewModel.getCurrentUser().observe(getActivity(), new Observer<User>() {
             @Override
@@ -50,7 +50,11 @@ public class GroupsFragment extends Fragment {
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("User_name", user.getUsername());
                     editor.commit();
-                    adapter = new RecentGroupsAdapter(viewModel.getCurrentUsersGroups(), getActivity(), viewModel);
+                    adapter = new RecentGroupsAdapter(viewModel.getCurrentUsersGroups(), getActivity(), viewModel,
+                            value -> {
+                                if (value) binding.emptyTextView.setVisibility(View.VISIBLE);
+                                else binding.emptyTextView.setVisibility(View.GONE);
+                            });
                     adapter.startListening();
                     recyclerView.setAdapter(adapter);
                 }

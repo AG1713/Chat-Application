@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.chatapp.R;
 import com.example.chatapp.viewmodels.MainActivityViewModel;
 import com.example.chatapp.views.SearchUserActivity;
 import com.example.chatapp.views.adapter.RecentChatsAdapter;
 import com.example.chatapp.databinding.FragmentChatsBinding;
+
+import java.util.function.Consumer;
 
 
 public class ChatsFragment extends Fragment {
@@ -30,13 +33,15 @@ public class ChatsFragment extends Fragment {
     MainActivityViewModel viewModel;
     SharedPreferences pref;
 
+    TextView emtpyTextView;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chats, container, false);
 
         pref = getActivity().getSharedPreferences("User", Context.MODE_PRIVATE);
-        viewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
 
         binding.fab.setOnClickListener(v -> {
             Intent i = new Intent(getActivity(), SearchUserActivity.class);
@@ -51,16 +56,15 @@ public class ChatsFragment extends Fragment {
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("User_name", user.getUsername());
                 editor.commit();
-                adapter = new RecentChatsAdapter(viewModel.getCurrentUsersChats(), viewModel, getActivity());
+                adapter = new RecentChatsAdapter(viewModel.getCurrentUsersChats(), viewModel, getActivity(),
+                        value -> {
+                            if (value)binding.emptyTextView.setVisibility(View.VISIBLE);
+                            else binding.emptyTextView.setVisibility(View.GONE);
+                        });
                 adapter.startListening();
                 recyclerView.setAdapter(adapter);
             }
         });
-
-
-
-
-
 
         return binding.getRoot();
     }

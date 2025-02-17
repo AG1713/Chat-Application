@@ -47,13 +47,15 @@ public class AddGroupMembersActivity extends AppCompatActivity {
 
         viewModel.getGroup(groupId).observe(this, group ->
                 binding.btnSearchUser.setOnClickListener(v -> getUsers()));
-
-
+        
     }
 
-
     public void getUsers(){
-        adapter = new AddUserAdapter(viewModel.getUserOptions(binding.edtSearchUser.getText().toString()), this, viewModel, chatRoomId, groupId);
+        adapter = new AddUserAdapter(viewModel.getUserOptions(binding.edtSearchUser.getText().toString()), this, viewModel,
+                value -> {
+                    if (value) binding.emptyTextView.setVisibility(View.VISIBLE);
+                    else binding.emptyTextView.setVisibility(View.GONE);
+                });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.startListening();

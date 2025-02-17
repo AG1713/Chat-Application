@@ -21,14 +21,19 @@ import com.example.chatapp.repository.models.UserChat;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.util.function.Consumer;
+
 public class RecentChatsAdapter extends FirestoreRecyclerAdapter<UserChat, RecentChatsAdapter.MyViewHolder> {
     Context context;
     MainActivityViewModel viewModel;
 
-    public RecentChatsAdapter(@NonNull FirestoreRecyclerOptions<UserChat> options, MainActivityViewModel viewModel, Context context) {
+    Consumer<Boolean> emptyOptionsCallback;
+
+    public RecentChatsAdapter(@NonNull FirestoreRecyclerOptions<UserChat> options, MainActivityViewModel viewModel, Context context, Consumer<Boolean> emptyOptionsCallback) {
         super(options);
         this.context = context;
         this.viewModel = viewModel;
+        this.emptyOptionsCallback = emptyOptionsCallback;
 
         Log.d("RecentChatsAdapter", "Number of chats: " + options.getSnapshots().size());
     }
@@ -48,8 +53,6 @@ public class RecentChatsAdapter extends FirestoreRecyclerAdapter<UserChat, Recen
                         .into(holder.binding.otherUserProfilePhoto.profilePicImageview);
             }
         });
-
-
 
         /*
         TODO: Chatroom creation asynchronous. Make it such that the passing of intent happens
@@ -91,5 +94,10 @@ public class RecentChatsAdapter extends FirestoreRecyclerAdapter<UserChat, Recen
         }
     }
 
-
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (getItemCount() <= 0) emptyOptionsCallback.accept(true);
+        else emptyOptionsCallback.accept(false);
+    }
 }

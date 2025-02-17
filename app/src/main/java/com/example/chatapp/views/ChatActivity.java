@@ -19,6 +19,8 @@ import com.example.chatapp.views.adapter.ChatsAdapter;
 import com.example.chatapp.databinding.ActivityChatBinding;
 import com.example.chatapp.repository.models.ChatRoom;
 
+import java.util.function.Consumer;
+
 public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
     private ChatActivityViewModel viewModel;
@@ -56,7 +58,11 @@ public class ChatActivity extends AppCompatActivity {
                     .observe(this, chatRoom -> {
                         if (chatRoom != null){
                             Log.d("ChatActivity", "onCreate: Chatroom not null");
-                            adapter = new ChatsAdapter(viewModel.getAllChats());
+                            adapter = new ChatsAdapter(viewModel.getAllChats(),
+                                    value -> {
+                                        if (value) binding.emptyTextView.setVisibility(View.VISIBLE);
+                                        else binding.emptyTextView.setVisibility(View.GONE);
+                                    });
                             adapter.startListening();
                             recyclerView.setAdapter(adapter);
 
@@ -86,7 +92,11 @@ public class ChatActivity extends AppCompatActivity {
                 public void onChanged(ChatRoom chatRoom) {
                     if (chatRoom != null){
                         Log.d("ChatActivity", "onCreate: Chatroom not null");
-                        adapter = new ChatsAdapter(viewModel.getAllChats());
+                        adapter = new ChatsAdapter(viewModel.getAllChats(),
+                                value -> {
+                                    if (value) binding.emptyTextView.setVisibility(View.VISIBLE);
+                                    else binding.emptyTextView.setVisibility(View.GONE);
+                                });
                         adapter.startListening();
                         recyclerView.setAdapter(adapter);
 

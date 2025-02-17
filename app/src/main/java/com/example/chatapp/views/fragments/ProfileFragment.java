@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
 
         pref = getActivity().getSharedPreferences("User", Context.MODE_PRIVATE);
-        viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
 
         viewModel.getCurrentUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override

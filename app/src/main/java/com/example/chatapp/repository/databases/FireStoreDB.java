@@ -150,7 +150,6 @@ public class FireStoreDB {
         );
         chatRoomsRef.document(chatRoomId).set(newChatRoom)
                 .addOnSuccessListener(unused -> {
-
                     callBack.onCallback(chatRoomId);
                     Log.d("FireStoreDB", "getOrCreateChatRoom: Ran");
                 });
@@ -170,22 +169,24 @@ public class FireStoreDB {
 
             String chatRoomId = getChatRoomIdForUsers(currentUserId, userId);
 
-            createChatRoom(chatRoomId, members, new FireStoreChatRoomIdCallback() {
-                @Override
-                public void onCallback(String chatRoomId) {
-                    for (int i=0 ; i<members.size() ; i++){
+            createChatRoom(chatRoomId, members, chatRoomId1 -> {
+                for (int i=0 ; i<members.size() ; i++){
 
-                        int finalI = i;
-                        usersRef.document(members.get((i+1)%members.size()).getId()).get().addOnSuccessListener(snapshot ->
-                                usersRef.document(members.get(finalI).getId()).collection("Chats")
-                                        .document(chatRoomId).set(new UserChat(
-                                                chatRoomId,
-                                                members.get((finalI +1)%members.size()).getId(),
-                                                snapshot.toObject(User.class).getUsername()
-                                        )));
+                    int finalI = i;
+                    usersRef.document(members.get((i+1)%members.size()).getId()).get().addOnSuccessListener(snapshot2 ->
+                            usersRef.document(members.get(finalI).getId()).collection("Chats")
+                            .document(chatRoomId1).get().addOnSuccessListener(snapshot1 -> {
+                                if (!snapshot1.exists()){
+                                    usersRef.document(members.get(finalI).getId()).collection("Chats")
+                                            .document(chatRoomId1).set(new UserChat(
+                                                    chatRoomId1,
+                                            members.get((finalI + 1) % members.size()).getId(),
+                                            snapshot2.toObject(User.class).getUsername()
+                                    ));
+                                }
+                            }));
 
-                        callBack.onCallback(chatRoomId);
-                    }
+                    callBack.onCallback(chatRoomId1);
                 }
             });
 

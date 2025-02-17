@@ -19,20 +19,19 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class AddUserAdapter extends FirestoreRecyclerAdapter<User, AddUserAdapter.UserModelHolder> {
     Context context;
     AddGroupMembersActivityViewModel viewModel;
-    String chatRoomId;
-    String groupId;
+    Consumer<Boolean> emptyOptionsCallback;
 
 
-    public AddUserAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context, AddGroupMembersActivityViewModel myViewModel, String chatRoomId, String groupId) {
+    public AddUserAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context, AddGroupMembersActivityViewModel myViewModel, Consumer<Boolean> emptyOptionsCallback) {
         super(options);
         this.context = context;
         this.viewModel = myViewModel;
-        this.chatRoomId = chatRoomId;
-        this.groupId = groupId;
+        this.emptyOptionsCallback = emptyOptionsCallback;
     }
 
     @Override
@@ -78,6 +77,10 @@ public class AddUserAdapter extends FirestoreRecyclerAdapter<User, AddUserAdapte
         }
     }
 
-
-
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (getItemCount() <= 0) emptyOptionsCallback.accept(true);
+        else emptyOptionsCallback.accept(false);
+    }
 }

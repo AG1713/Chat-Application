@@ -14,10 +14,14 @@ import com.example.chatapp.repository.models.Message;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-public class ChatsAdapter extends FirestoreRecyclerAdapter<Message, ChatsAdapter.MyViewHolder> {
+import java.util.function.Consumer;
 
-    public ChatsAdapter(@NonNull FirestoreRecyclerOptions<Message> options) {
+public class ChatsAdapter extends FirestoreRecyclerAdapter<Message, ChatsAdapter.MyViewHolder> {
+    Consumer<Boolean> emptyOptionsCallback;
+
+    public ChatsAdapter(@NonNull FirestoreRecyclerOptions<Message> options, Consumer<Boolean> emptyOptionsCallback) {
         super(options);
+        this.emptyOptionsCallback = emptyOptionsCallback;
     }
 
     @Override
@@ -47,5 +51,10 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Message, ChatsAdapter
         }
     }
 
-
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (getItemCount() <= 0) emptyOptionsCallback.accept(true);
+        else emptyOptionsCallback.accept(false);
+    }
 }

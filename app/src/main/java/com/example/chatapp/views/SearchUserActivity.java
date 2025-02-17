@@ -2,6 +2,7 @@ package com.example.chatapp.views;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,7 +47,11 @@ public class SearchUserActivity extends AppCompatActivity {
                 Toast.makeText(this, "Username cannot be empty", Toast.LENGTH_SHORT).show();
             }
             else {
-                adapter = new SearchUserRecyclerAdapter(viewModel.getUserOptions(hint), SearchUserActivity.this, viewModel);
+                adapter = new SearchUserRecyclerAdapter(viewModel.getUserOptions(hint), SearchUserActivity.this, viewModel,
+                        value -> {
+                            if (value) binding.emptyTextView.setVisibility(View.VISIBLE);
+                            else binding.emptyTextView.setVisibility(View.GONE);
+                        });
                 recyclerView.setAdapter(adapter);
 
                 // Restart listening for changes after updating the query
