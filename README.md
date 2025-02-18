@@ -40,6 +40,7 @@
 <ol>
     <li>Clone the repository:</li>
     <pre><code>git clone https://github.com/AG1713/Chatting-Application.git</code></pre>
+    <li>Make sure you include your own google-services.json file from your <b>Firebase console</b></li>
     <li>Open the project in <b>Android Studio</b>.</li>
     <li>Build and run the app on an emulator or a physical device.</li>
 </ol>
